@@ -1,29 +1,27 @@
 package am.smartcode.first_spring.service.user;
 
-import am.smartcode.first_spring.model.User;
-import org.springframework.transaction.annotation.Transactional;
+import am.smartcode.first_spring.model.dto.user.CreateUserDto;
+import am.smartcode.first_spring.model.entity.UserEntity;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface UserService {
 
     void login(String email, String password);
 
-    void    register(User user);
+    void register(CreateUserDto createUserDto);
 
-    @Transactional
     void verify(String email, String code);
 
-    User create(User user);
+    UserEntity create(UserEntity user);
 
-    User update(User user, int id);
+    UserEntity update(UserEntity user, int id);
 
-    User getById(int id);
+    UserEntity getById(int id);
 
-    List<User> getAll();
+    List<UserEntity> getAll();
 
     void delete(int id);
 
-    User getByEmail(String email);
+    UserEntity getByEmail(String email);
 }

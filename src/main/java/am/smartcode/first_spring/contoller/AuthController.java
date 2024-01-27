@@ -3,7 +3,8 @@ package am.smartcode.first_spring.contoller;
 import am.smartcode.first_spring.exception.UserAlreadyExistsException;
 import am.smartcode.first_spring.exception.ValidationException;
 import am.smartcode.first_spring.exception.VerificationException;
-import am.smartcode.first_spring.model.User;
+import am.smartcode.first_spring.model.dto.user.CreateUserDto;
+import am.smartcode.first_spring.model.entity.UserEntity;
 import am.smartcode.first_spring.service.user.UserService;
 import am.smartcode.first_spring.util.constants.Parameter;
 import am.smartcode.first_spring.util.constants.Path;
@@ -46,7 +47,7 @@ public class AuthController {
                 newCookie.setMaxAge(360000);
                 resp.addCookie(newCookie);
 
-                User byEmail = userService.getByEmail(email);
+                UserEntity byEmail = userService.getByEmail(email);
                 session.setAttribute(Parameter.ID, byEmail.getId());
                 session.setAttribute(Parameter.NAME, byEmail.getName());
 
@@ -77,7 +78,7 @@ public class AuthController {
                 cookie.setMaxAge(360000);
                 resp.addCookie(cookie);
             }
-            User byEmail = userService.getByEmail(email);
+            UserEntity byEmail = userService.getByEmail(email);
             session.setAttribute(Parameter.ID, byEmail.getId());
             session.setAttribute(Parameter.NAME, byEmail.getName());
             return new ModelAndView(Path.HOME);
@@ -92,18 +93,18 @@ public class AuthController {
         }
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ModelAndView register(@RequestParam(Parameter.NAME) String name,
                                  @RequestParam(Parameter.LAST_NAME) String lastname,
                                  @RequestParam(Parameter.AGE) Integer age,
                                  @RequestParam(Parameter.EMAIL) String email,
                                  @RequestParam(Parameter.PASSWORD) String password) {
 
-        User user = User.builder()
+        CreateUserDto user = CreateUserDto.builder()
                 .name(name)
                 .lastname(lastname)
                 .email(email)
-                .birthday(LocalDate.now())
+                .age(LocalDate.now())
                 .password(password)
                 .build();
 
@@ -131,6 +132,18 @@ public class AuthController {
             return modelAndView;
         }
 
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ModelAndView logout(HttpSession session,
+                               HttpServletResponse resp,
+                               @CookieValue(name = Parameter.REMEMBER_COOKIE, required = false) Cookie cookie) {
+        session.invalidate();
+        if (cookie != null) {
+            cookie.setMaxAge(0);
+            resp.addCookie(cookie);
+        }
+        return new ModelAndView(Path.WELCOME);
     }
 
 

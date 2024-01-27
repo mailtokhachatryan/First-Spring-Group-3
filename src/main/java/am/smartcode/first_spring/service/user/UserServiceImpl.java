@@ -4,7 +4,9 @@ package am.smartcode.first_spring.service.user;
 import am.smartcode.first_spring.exception.UserAlreadyExistsException;
 import am.smartcode.first_spring.exception.ValidationException;
 import am.smartcode.first_spring.exception.VerificationException;
-import am.smartcode.first_spring.model.User;
+import am.smartcode.first_spring.mapper.UserMapper;
+import am.smartcode.first_spring.model.dto.user.CreateUserDto;
+import am.smartcode.first_spring.model.entity.UserEntity;
 import am.smartcode.first_spring.repository.UserRepository;
 import am.smartcode.first_spring.service.email.EmailService;
 import am.smartcode.first_spring.util.RandomGenerator;
@@ -24,11 +26,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
     public void login(String email, String password) {
-        User user = userRepository.findByEmail(email);
+        UserEntity user = userRepository.findByEmail(email);
         if (user != null) {
             if (!user.isVerified())
                 throw new VerificationException("You must verify your account");
@@ -40,10 +43,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void register(User user) {
-        User byEmail = userRepository.findByEmail(user.getEmail());
+    public void register(CreateUserDto createUserDto) {
+
+        UserEntity byEmail = userRepository.findByEmail(createUserDto.getEmail());
         if (byEmail != null)
             throw new UserAlreadyExistsException();
+
+        UserEntity user = userMapper.toEntity(createUserDto);
+
         String code = RandomGenerator.generateNumericString(6);
         user.setVerified(false);
         user.setCode(code);
@@ -57,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void verify(String email, String code) {
-        User byEmail = userRepository.findByEmail(email);
+        UserEntity byEmail = userRepository.findByEmail(email);
         if (!code.equals(byEmail.getCode())) {
             throw new VerificationException("Code is incorrect");
         }
@@ -68,14 +75,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(User user) {
+    public UserEntity create(UserEntity user) {
         return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public User update(User user, int id) {
-        User userById = userRepository.findById(id).orElseThrow();
+    public UserEntity update(UserEntity user, int id) {
+        UserEntity userById = userRepository.findById(id).orElseThrow();
         userById.setName(user.getName());
         userById.setLastname(user.getLastname());
         userById.setBirthday(user.getBirthday());
@@ -84,13 +91,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getById(int id) {
+    public UserEntity getById(int id) {
         return null;
     }
 
     @Override
     @Transactional
-    public List<User> getAll() {
+    public List<UserEntity> getAll() {
         return null;
     }
 
@@ -102,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getByEmail(String email) {
+    public UserEntity getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

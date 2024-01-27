@@ -1,4 +1,4 @@
-package am.smartcode.first_spring.model;
+package am.smartcode.first_spring.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;

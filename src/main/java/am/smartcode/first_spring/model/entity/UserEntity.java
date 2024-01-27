@@ -1,4 +1,4 @@
-package am.smartcode.first_spring.model;
+package am.smartcode.first_spring.model.entity;
 
 import am.smartcode.first_spring.util.constants.Parameter;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = Parameter.USERS)
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
