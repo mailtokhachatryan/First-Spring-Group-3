@@ -6,6 +6,7 @@ import am.smartcode.first_spring.exception.ValidationException;
 import am.smartcode.first_spring.exception.VerificationException;
 import am.smartcode.first_spring.mapper.UserMapper;
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
+import am.smartcode.first_spring.model.dto.user.UpdateUserDto;
 import am.smartcode.first_spring.model.entity.UserEntity;
 import am.smartcode.first_spring.repository.UserRepository;
 import am.smartcode.first_spring.service.email.EmailService;
@@ -81,11 +82,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserEntity update(UserEntity user, int id) {
+    public UserEntity update(UpdateUserDto updateUserDto, int id) {
         UserEntity userById = userRepository.findById(id).orElseThrow();
-        userById.setName(user.getName());
-        userById.setLastname(user.getLastname());
-        userById.setBirthday(user.getBirthday());
+
+        userMapper.toEntity(userById, updateUserDto);
+
         return userRepository.save(userById);
     }
 

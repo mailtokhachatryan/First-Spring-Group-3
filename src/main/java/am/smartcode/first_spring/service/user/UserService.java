@@ -1,7 +1,9 @@
 package am.smartcode.first_spring.service.user;
 
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
+import am.smartcode.first_spring.model.dto.user.UpdateUserDto;
 import am.smartcode.first_spring.model.entity.UserEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ public interface UserService {
 
     UserEntity create(UserEntity user);
 
-    UserEntity update(UserEntity user, int id);
+    UserEntity update(UpdateUserDto updateUserDto, int id);
 
     UserEntity getById(int id);
 

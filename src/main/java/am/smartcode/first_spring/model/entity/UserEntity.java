@@ -47,22 +47,5 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     private String code;
 
-    @Column
-    private LocalDateTime createdAt;
-
-    @Column
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    private void prePersist() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    private void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
 
 }

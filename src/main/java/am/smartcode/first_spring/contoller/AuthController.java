@@ -11,6 +11,7 @@ import am.smartcode.first_spring.util.constants.Path;
 import am.smartcode.first_spring.util.encoder.AESManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
 
     private final UserService userService;
@@ -46,10 +48,6 @@ public class AuthController {
                 Cookie newCookie = new Cookie(Parameter.REMEMBER_COOKIE, AESManager.encrypt(email + ":" + password));
                 newCookie.setMaxAge(360000);
                 resp.addCookie(newCookie);
-
-                UserEntity byEmail = userService.getByEmail(email);
-                session.setAttribute(Parameter.ID, byEmail.getId());
-                session.setAttribute(Parameter.NAME, byEmail.getName());
 
                 return login(email, password, "on", resp, session);
             } else {
