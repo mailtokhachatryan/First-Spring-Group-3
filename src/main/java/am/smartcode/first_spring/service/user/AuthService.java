@@ -2,24 +2,18 @@ package am.smartcode.first_spring.service.user;
 
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
 import am.smartcode.first_spring.model.dto.user.UpdateUserDto;
-import am.smartcode.first_spring.model.dto.user.UserDto;
 import am.smartcode.first_spring.model.entity.UserEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface UserService {
+public interface AuthService {
 
-    UserDto create(CreateUserDto user);
+    void login(String email, String password);
 
-    UserDto update(UpdateUserDto updateUserDto, int id);
+    void register(CreateUserDto createUserDto);
 
-    UserDto getById(int id);
+    void verify(String email, String code);
 
-    List<UserDto> getAll();
-
-    void delete(int id);
-
-    UserDto getByEmail(String email);
-
+    UserEntity getByEmail(String email);
 }

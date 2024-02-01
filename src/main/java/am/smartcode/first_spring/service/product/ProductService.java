@@ -10,4 +10,6 @@ public interface ProductService {
     Integer create(CreateProductDto createProductDto);
 
     List<ProductDto> getAll();
+
+    ProductDto getById(Integer id);
 }

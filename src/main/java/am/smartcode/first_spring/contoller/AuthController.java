@@ -5,7 +5,7 @@ import am.smartcode.first_spring.exception.ValidationException;
 import am.smartcode.first_spring.exception.VerificationException;
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
 import am.smartcode.first_spring.model.entity.UserEntity;
-import am.smartcode.first_spring.service.user.UserService;
+import am.smartcode.first_spring.service.user.AuthService;
 import am.smartcode.first_spring.util.constants.Parameter;
 import am.smartcode.first_spring.util.constants.Path;
 import am.smartcode.first_spring.util.encoder.AESManager;
@@ -30,7 +30,7 @@ import java.time.LocalDate;
 @Validated
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView start(
@@ -70,13 +70,13 @@ public class AuthController {
                               HttpSession session
     ) {
         try {
-            userService.login(email, password);
+            authService.login(email, password);
             if (rememberMe != null && rememberMe.equalsIgnoreCase(Parameter.ON)) {
                 Cookie cookie = new Cookie(Parameter.REMEMBER_COOKIE, AESManager.encrypt(email + ":" + password));
                 cookie.setMaxAge(360000);
                 resp.addCookie(cookie);
             }
-            UserEntity byEmail = userService.getByEmail(email);
+            UserEntity byEmail = authService.getByEmail(email);
             session.setAttribute(Parameter.ID, byEmail.getId());
             session.setAttribute(Parameter.NAME, byEmail.getName());
             return new ModelAndView(Path.HOME);
@@ -107,7 +107,7 @@ public class AuthController {
                 .build();
 
         try {
-            userService.register(user);
+            authService.register(user);
             return new ModelAndView(Path.VERIFY);
         } catch (UserAlreadyExistsException e) {
             ModelAndView modelAndView = new ModelAndView(Path.WELCOME);
@@ -122,7 +122,7 @@ public class AuthController {
                                @RequestParam String code) {
 
         try {
-            userService.verify(email, code);
+            authService.verify(email, code);
             return new ModelAndView(Path.WELCOME);
         } catch (VerificationException e) {
             ModelAndView modelAndView = new ModelAndView(Path.VERIFY);

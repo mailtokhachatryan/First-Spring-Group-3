@@ -1,6 +1,7 @@
 package am.smartcode.first_spring.model.entity;
 
 import am.smartcode.first_spring.util.constants.Parameter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
