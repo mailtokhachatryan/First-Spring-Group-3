@@ -3,6 +3,7 @@ package am.smartcode.first_spring.contoller;
 import am.smartcode.first_spring.exception.EntityNotFoundException;
 import am.smartcode.first_spring.model.dto.product.CreateProductDto;
 import am.smartcode.first_spring.model.dto.product.ProductDto;
+import am.smartcode.first_spring.model.dto.product.ProductFilter;
 import am.smartcode.first_spring.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,14 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public Integer create(@RequestBody CreateProductDto createProductDto) {
-        return productService.create(createProductDto);
+    public ResponseEntity<ProductDto> create(@RequestBody CreateProductDto createProductDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(createProductDto));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductDto>> getAll() {
+    @PostMapping("/filter")
+    public ResponseEntity<List<ProductDto>> getAll(@RequestBody ProductFilter productFilter) {
 //        return new ResponseEntity<>(productService.getAll(),HttpStatus.OK);
-        return ResponseEntity.ok(productService.getAll());
+        return ResponseEntity.ok(productService.getAll(productFilter));
     }
 
     @GetMapping("/{id}")
@@ -44,7 +45,6 @@ public class ProductController {
         } catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-
     }
 
 

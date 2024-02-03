@@ -5,6 +5,7 @@ import am.smartcode.first_spring.exception.UserAlreadyExistsException;
 import am.smartcode.first_spring.exception.ValidationException;
 import am.smartcode.first_spring.exception.VerificationException;
 import am.smartcode.first_spring.mapper.UserMapper;
+import am.smartcode.first_spring.model.dto.user.ChangePasswordDto;
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
 import am.smartcode.first_spring.model.entity.UserEntity;
 import am.smartcode.first_spring.repository.UserRepository;
@@ -77,6 +78,9 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public void changePassword(ChangePasswordDto changePasswordDto) {
 
+    }
 }
 

@@ -1,5 +1,6 @@
 package am.smartcode.first_spring.service.user;
 
+import am.smartcode.first_spring.model.dto.user.ChangePasswordDto;
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
 import am.smartcode.first_spring.model.dto.user.UpdateUserDto;
 import am.smartcode.first_spring.model.entity.UserEntity;
@@ -16,4 +17,6 @@ public interface AuthService {
     void verify(String email, String code);
 
     UserEntity getByEmail(String email);
+
+    void changePassword(ChangePasswordDto changePasswordDto);
 }
