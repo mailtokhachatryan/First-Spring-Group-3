@@ -5,8 +5,5 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CategoryDto extends BaseCategoryDto{
-    private Integer id;
-
-
+public class CreateCategoryDto extends BaseCategoryDto{
 }
