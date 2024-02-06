@@ -1,9 +1,7 @@
 package am.smartcode.first_spring.service.user;
 
 
-import am.smartcode.first_spring.exception.UserAlreadyExistsException;
-import am.smartcode.first_spring.exception.ValidationException;
-import am.smartcode.first_spring.exception.VerificationException;
+import am.smartcode.first_spring.exception.*;
 import am.smartcode.first_spring.mapper.UserMapper;
 import am.smartcode.first_spring.model.dto.user.ChangePasswordDto;
 import am.smartcode.first_spring.model.dto.user.CreateUserDto;
@@ -80,6 +78,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void changePassword(ChangePasswordDto changePasswordDto) {
+        Integer id = changePasswordDto.getId();
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Product with id: %d not found.", id)));
+        if (!changePasswordDto.getOldPassword().equals(changePasswordDto.getNewPassword()) &&
+                changePasswordDto.getNewPassword().equals(changePasswordDto.getNewPassword2())) {
+            userEntity.setPassword(changePasswordDto.getNewPassword());
+        }else throw new  InvalidPasswordException("Invalid password");
 
     }
 }

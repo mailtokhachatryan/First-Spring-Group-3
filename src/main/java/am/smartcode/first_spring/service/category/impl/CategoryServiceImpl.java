@@ -46,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto update(UpdateCategoryDto updateCategoryDto, int id) {
         CategoryEntity categoryEntity = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Product with id: %d not found.", id)));
@@ -55,6 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void delete(int id) {
         categoryRepository.deleteById(id);
 
