@@ -10,16 +10,12 @@ import am.smartcode.first_spring.model.entity.ProductEntity;
 import am.smartcode.first_spring.repository.CategoryRepository;
 import am.smartcode.first_spring.repository.ProductRepository;
 import am.smartcode.first_spring.service.product.ProductService;
+import am.smartcode.first_spring.spec.ProductSpec;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @Service
@@ -29,6 +25,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
+    private final ProductSpec productSpec;
 
 
     @Override
@@ -47,37 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductDto> getAll(ProductFilter productFilter) {
-
-        Specification<ProductEntity> specification = Specification.where((root, query, criteriaBuilder) -> {
-
-            List<Predicate> predicates = new ArrayList<>();
-            Predicate filterPredicate;
-
-            BigDecimal startPrice = productFilter.getStartPrice();
-            if (Objects.nonNull(startPrice)) {
-                filterPredicate = criteriaBuilder
-                        .greaterThanOrEqualTo(root.get("price"), startPrice);
-                predicates.add(filterPredicate);
-            }
-
-            BigDecimal endPrice = productFilter.getEndPrice();
-            if (Objects.nonNull(endPrice)) {
-                filterPredicate = criteriaBuilder
-                        .lessThanOrEqualTo(root.get("price"), endPrice);
-                predicates.add(filterPredicate);
-            }
-
-            Integer categoryId = productFilter.getCategoryId();
-            if (categoryId != null) {
-                filterPredicate = criteriaBuilder.equal(root.get("category"), categoryId);
-                predicates.add(filterPredicate);
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        });
-
-
-        return productRepository.findAll(specification)
+        return productRepository.findAll(productSpec.filter(productFilter))
                 .stream()
                 .map(productMapper::toDto)
                 .toList();
