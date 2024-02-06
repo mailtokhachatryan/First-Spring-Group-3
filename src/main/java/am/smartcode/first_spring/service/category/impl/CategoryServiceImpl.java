@@ -32,9 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDto> getAll() {
-        List<CategoryDto> list = categoryRepository.findAll().stream()
-                .map(categoryMapper::toDto).toList();
-        return null;
+        return categoryRepository.findAll().stream().map(categoryMapper::toDto).toList();
     }
 
     @Override
@@ -51,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryEntity categoryEntity = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Product with id: %d not found.", id)));
         categoryMapper.update(categoryEntity, updateCategoryDto);
+        categoryRepository.save(categoryEntity);
         return categoryMapper.toDto(categoryEntity);
 
     }
@@ -59,6 +58,5 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void delete(int id) {
         categoryRepository.deleteById(id);
-
     }
 }

@@ -32,8 +32,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto update(UpdateUserDto updateUserDto, int id) {
         UserEntity userById = userRepository.findById(id).orElseThrow();
-
-        userMapper.update(userRepository.save(userById), updateUserDto);
+        userMapper.update(userById, updateUserDto);
         userRepository.save(userById);
         return userMapper.toDto(userById);
     }
